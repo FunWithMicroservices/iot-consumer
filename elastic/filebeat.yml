@@ -1,0 +1,12 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths: 
+    - '/logs/*.log'
+
+output.elasticsearch:
+  hosts: ["${ES_ENDPOINT}"]
+  username: "elastic" 
+  password: "${ES_PASSWORD}"
+  indices:
+    - index: "iot-consumer-${ENV}"

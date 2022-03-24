@@ -1,14 +1,32 @@
 version: "3"
 
+volumes:
+  python-consumer-log-volume:
+
 services:
   python-consumer:
     build: .
+    container_name: workshop-iot-consumer-python-consumer
     env_file: ./app/.env
+    volumes:
+      - ./app/:/app
+      - python-consumer-log-volume:/app/logs/
 
   influxdb:
     image: influxdb:1.8.4-alpine
+    container_name: workshop-iot-consumer-influxdb
     ports:
       - "8086:8086"
     environment:
       - INFLUX_USERNAME="influxdb"
       - INFLUX_PASSWORD="foobar"
+
+  filebeat:
+    image: "docker.elastic.co/beats/filebeat:8.1.1"
+    container_name: workshop-iot-consumer-filebeat
+    env_file: ./app/.env
+    volumes:
+      - ./elastic/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - python-consumer-log-volume:/logs
