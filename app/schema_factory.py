@@ -1,4 +1,5 @@
 import requests
+import logging
 
 from datetime import datetime
 
@@ -7,6 +8,9 @@ import avro.schema
 import avro.io
 
 from settings import SCHEMA_REGISTRY_URL, TOPICS, INFLUX_CLIENT
+
+
+logger = logging.getLogger(__name__)
 
 
 __all__ = ("schemas", )
@@ -65,8 +69,10 @@ class _Schemas:
 
     def write_to_influx(self, message):
         topic = message.topic()
+        logger.info(f"Received message from topic {topic}")
         measurement = topic.replace("iot-", "").replace("-data", "")
         decoded_msg = self.avro_message_parser(message)
+        logger.info(f"Decoded message: {decoded_msg}")
         time = decoded_msg.pop("timestamp")
         tags = {"car_id": decoded_msg.pop("car_id")}
         
@@ -76,7 +82,7 @@ class _Schemas:
             "tags": tags,
             "fields": decoded_msg
         }
-
+        logger.info(f"Write message into influx measurement {measurement}")
         INFLUX_CLIENT.write_points([influx_dict])
 
 schemas = _Schemas()

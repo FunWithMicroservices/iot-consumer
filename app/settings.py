@@ -9,6 +9,7 @@ load_dotenv()
 
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent
+LOG_DIR = BASE_DIR / "logs"
 SCHEMA_REGISTRY_URL = os.environ["SCHEMA_REGISTRY_URL"]
 KAFKA_HOST = os.environ["KAFKA_HOST"]
 TOPICS = os.environ["TOPICS"].split()
