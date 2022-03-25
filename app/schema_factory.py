@@ -73,7 +73,7 @@ class _Schemas:
         measurement = topic.replace("iot-", "").replace("-data", "")
         decoded_msg = self.avro_message_parser(message)
         logger.info(f"Decoded message: {decoded_msg}")
-        time = decoded_msg.pop("timestamp")
+        time = decoded_msg.pop("time")
         tags = {"car_id": decoded_msg.pop("car_id")}
         
         influx_dict = {

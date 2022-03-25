@@ -16,3 +16,5 @@ __pycache__/
 
 # Docker
 docker-compose.local.yml
+
+*.log
